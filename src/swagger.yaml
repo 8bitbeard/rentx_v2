@@ -1,0 +1,147 @@
+swagger: "2.0"
+info:
+  title: "RentX Documentation"
+  description: "This is an car rent system API"
+  version: "1.0.0"
+  contact:
+    email: "willsouzafilho@gmail.com"
+tags:
+  - name: "Category"
+    description: "Everything about categories"
+  - name: "Specification"
+    description: "Everything about specifications"
+paths:
+  /categories:
+    post:
+      tags:
+        - "Category"
+      summary: "Create a new category"
+      description: "Create a new category"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Category object that needs to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateCategory"
+      responses:
+        "201":
+          description: "Created"
+        "500":
+          description: "Category already exists!"
+    get:
+      tags:
+        - "Category"
+      summary: "List all categories"
+      description: "List all categories"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Category"
+  /categories/import:
+    post:
+      tags:
+        - "Category"
+      summary: "Bulk create categories"
+      description: "Bulk create categories"
+      consumes:
+        - "multipart/form-data"
+      parameters:
+        - in: "formData"
+          name: "file"
+          description: "The file to upload"
+          type: "file"
+          required: true
+      responses:
+        "201":
+          description: "Created"
+  /specifications:
+    post:
+      tags:
+        - "Specification"
+      summary: "Create a new specification"
+      description: "Create a new specification"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Specification object that needs to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateSpecification"
+      responses:
+        "201":
+          description: "Created"
+        "500":
+          description: "Specification already exists!"
+definitions:
+  Category:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        example: "f135221e-e18b-4084-bdeb-4a0f856f92d6"
+      name:
+        type: "string"
+        example: "Category name sample"
+      description:
+        type: "string"
+        example: "Category description sample"
+      created_at:
+        type: "string"
+        format: "date-time"
+        example: "2022-03-30T00:15:37.505Z"
+  CreateCategory:
+    type: "object"
+    required:
+      - "name"
+      - "description"
+    properties:
+      name:
+        type: "string"
+        example: "Category name sample"
+      description:
+        type: "string"
+        example: "Category description sample"
+  Specification:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        example: "f135221e-e18b-4084-bdeb-4a0f856f92d6"
+      name:
+        type: "string"
+        example: "Specification name sample"
+      description:
+        type: "string"
+        example: "Specification description sample"
+      created_at:
+        type: "string"
+        format: "date-time"
+        example: "2022-03-30T00:15:37.505Z"
+  CreateSpecification:
+    type: "object"
+    required:
+      - "name"
+      - "description"
+    properties:
+      name:
+        type: "string"
+        example: "Specification name sample"
+      description:
+        type: "string"
+        example: "Specification description sample"
