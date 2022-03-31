@@ -1,4 +1,4 @@
-openapi: "3.0.0"
+swagger: "2.0"
 info:
   title: "RentX Documentation"
   description: "This is an car rent system API"
@@ -6,11 +6,37 @@ info:
   contact:
     email: "willsouzafilho@gmail.com"
 tags:
+  - name: "Authentication"
+    description: "Everything about authentication"
   - name: "Category"
     description: "Everything about categories"
   - name: "Specification"
     description: "Everything about specifications"
 paths:
+  /auth/login:
+    post:
+      tags:
+        - "Authentication"
+      summary: "Authenticate to the application"
+      description: "Authenticate to the application"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Authenticate on the application"
+          required: true
+          schema:
+            $ref: "#/definitions/Credentials"
+      responses:
+        "201":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/LoginResponse"
+        "401":
+          description: "Email or password invalid!"
   /categories:
     post:
       tags:
@@ -87,6 +113,30 @@ paths:
         "500":
           description: "Specification already exists!"
 definitions:
+  Credentials:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        example: "user@example.com"
+      password:
+        type: "string"
+        example: "123456"
+  LoginResponse:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDg3NDcyNjgsImV4cCI6MTY0ODgzMzY2OCwic3ViIjoiYmYzZDk3ZjUtNTA4ZC00ZmI0LWFlZjMtMjQ0MjVmNmM3ZjE1In0.4niAF4e_wzjwYEntSVl4brxdtZgYK-8AqaG768_ruZQ"
+      user:
+        type: "object"
+        properties:
+          name:
+            type: "string"
+            example: "User Example"
+          email:
+            type: "string"
+            example: "user@example.com"
   Category:
     type: "object"
     properties:
