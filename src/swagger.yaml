@@ -12,6 +12,8 @@ tags:
     description: "Everything about categories"
   - name: "Specification"
     description: "Everything about specifications"
+  - name: "Users"
+    description: "Everything about users"
 paths:
   /auth/login:
     post:
@@ -112,6 +114,45 @@ paths:
           description: "Created"
         "500":
           description: "Specification already exists!"
+  /users:
+    post:
+      tags:
+        - "Users"
+      summary: "Create a new user"
+      description: "Create a new user"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Data to create a new user"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateUser"
+      responses:
+        "201":
+          description: "Success"
+        "400":
+          description: "User already exists!"
+  /users/avatar:
+    patch:
+      tags:
+        - "Users"
+      summary: "Update the user avatar"
+      description: "Update the user avatar"
+      consumes:
+        - "multipart/form-data"
+      parameters:
+        - in: "formData"
+          name: "avatar"
+          description: "The avatar image to upload"
+          type: "file"
+          required: true
+      responses:
+        "201":
+          description: "Created"
 definitions:
   Credentials:
     type: "object"
@@ -195,3 +236,23 @@ definitions:
       description:
         type: "string"
         example: "Specification description sample"
+  CreateUser:
+    type: "object"
+    required:
+      - "name"
+      - "email"
+      - "password"
+      - "driver_license"
+    properties:
+      name:
+        type: "string"
+        example: "Example User"
+      email:
+        type: "string"
+        example: "user@example.com"
+      password:
+        type: "string"
+        example: "123456"
+      driver_license:
+        type: "string"
+        example: "ABC123$%"
