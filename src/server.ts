@@ -1,10 +1,12 @@
 import "dotenv/config";
 import express from "express";
+import "express-async-errors";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 
 import { AppDataSource } from "./database";
 import "./shared/container";
+import { errorHandler } from "./middlewares/errorHandler";
 import { router } from "./routes";
 
 AppDataSource.initialize()
@@ -24,5 +26,7 @@ app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.use(router);
+
+app.use(errorHandler);
 
 app.listen(3333, () => console.log("Server is running!"));
