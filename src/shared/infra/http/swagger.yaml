@@ -1,4 +1,4 @@
-swagger: "2.0"
+openapi: "3.0.0"
 info:
   title: "RentX Documentation"
   description: "This is an car rent system API"
@@ -31,14 +31,28 @@ paths:
           description: "Authenticate on the application"
           required: true
           schema:
-            $ref: "#/definitions/Credentials"
+            $ref: "#/components/schemas/Credentials"
       responses:
         "201":
           description: "Success"
           schema:
-            $ref: "#/definitions/LoginResponse"
-        "401":
-          description: "Email or password invalid!"
+            $ref: "#/components/schemas/LoginResponse"
+        "400":
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Email or password incorrect!"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Internal server error - error message"
   /categories:
     post:
       tags:
@@ -55,12 +69,26 @@ paths:
           description: "Category object that needs to be added"
           required: true
           schema:
-            $ref: "#/definitions/CreateCategory"
+            $ref: "#/components/schemas/CreateCategory"
       responses:
         "201":
           description: "Created"
+        "409":
+          description: "Conflict"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Specification already exists!"
         "500":
-          description: "Category already exists!"
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Internal server error - error message"
     get:
       tags:
         - "Category"
@@ -71,10 +99,20 @@ paths:
       responses:
         "200":
           description: "Success"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Category"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Category"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Internal server error - error message"
   /categories/import:
     post:
       tags:
@@ -92,6 +130,14 @@ paths:
       responses:
         "201":
           description: "Created"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Internal server error - error message"
   /specifications:
     post:
       tags:
@@ -108,12 +154,26 @@ paths:
           description: "Specification object that needs to be added"
           required: true
           schema:
-            $ref: "#/definitions/CreateSpecification"
+            $ref: "#/components/schemas/CreateSpecification"
       responses:
         "201":
           description: "Created"
+        "409":
+          description: "Conflict"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Specification already exists!"
         "500":
-          description: "Specification already exists!"
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Internal server error - error message"
   /users:
     post:
       tags:
@@ -130,12 +190,26 @@ paths:
           description: "Data to create a new user"
           required: true
           schema:
-            $ref: "#/definitions/CreateUser"
+            $ref: "#/components/schemas/CreateUser"
       responses:
         "201":
-          description: "Success"
-        "400":
-          description: "User already exists!"
+          description: "Created"
+        "409":
+          description: "Conflict"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Specification already exists!"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Internal server error - error message"
   /users/avatar:
     patch:
       tags:
@@ -153,106 +227,120 @@ paths:
       responses:
         "201":
           description: "Created"
-definitions:
-  Credentials:
-    type: "object"
-    properties:
-      email:
-        type: "string"
-        example: "user@example.com"
-      password:
-        type: "string"
-        example: "123456"
-  LoginResponse:
-    type: "object"
-    properties:
-      token:
-        type: "string"
-        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDg3NDcyNjgsImV4cCI6MTY0ODgzMzY2OCwic3ViIjoiYmYzZDk3ZjUtNTA4ZC00ZmI0LWFlZjMtMjQ0MjVmNmM3ZjE1In0.4niAF4e_wzjwYEntSVl4brxdtZgYK-8AqaG768_ruZQ"
-      user:
-        type: "object"
-        properties:
-          name:
-            type: "string"
-            example: "User Example"
-          email:
-            type: "string"
-            example: "user@example.com"
-  Category:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-        format: "uuid"
-        example: "f135221e-e18b-4084-bdeb-4a0f856f92d6"
-      name:
-        type: "string"
-        example: "Category name sample"
-      description:
-        type: "string"
-        example: "Category description sample"
-      created_at:
-        type: "string"
-        format: "date-time"
-        example: "2022-03-30T00:15:37.505Z"
-  CreateCategory:
-    type: "object"
-    required:
-      - "name"
-      - "description"
-    properties:
-      name:
-        type: "string"
-        example: "Category name sample"
-      description:
-        type: "string"
-        example: "Category description sample"
-  Specification:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-        format: "uuid"
-        example: "f135221e-e18b-4084-bdeb-4a0f856f92d6"
-      name:
-        type: "string"
-        example: "Specification name sample"
-      description:
-        type: "string"
-        example: "Specification description sample"
-      created_at:
-        type: "string"
-        format: "date-time"
-        example: "2022-03-30T00:15:37.505Z"
-  CreateSpecification:
-    type: "object"
-    required:
-      - "name"
-      - "description"
-    properties:
-      name:
-        type: "string"
-        example: "Specification name sample"
-      description:
-        type: "string"
-        example: "Specification description sample"
-  CreateUser:
-    type: "object"
-    required:
-      - "name"
-      - "email"
-      - "password"
-      - "driver_license"
-    properties:
-      name:
-        type: "string"
-        example: "Example User"
-      email:
-        type: "string"
-        example: "user@example.com"
-      password:
-        type: "string"
-        example: "123456"
-      driver_license:
-        type: "string"
-        example: "ABC123$%"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Internal server error - error message"
+components:
+  schemas:
+    AppError:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+    Credentials:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+          example: "user@example.com"
+        password:
+          type: "string"
+          example: "123456"
+    LoginResponse:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDg3NDcyNjgsImV4cCI6MTY0ODgzMzY2OCwic3ViIjoiYmYzZDk3ZjUtNTA4ZC00ZmI0LWFlZjMtMjQ0MjVmNmM3ZjE1In0.4niAF4e_wzjwYEntSVl4brxdtZgYK-8AqaG768_ruZQ"
+        user:
+          type: "object"
+          properties:
+            name:
+              type: "string"
+              example: "User Example"
+            email:
+              type: "string"
+              example: "user@example.com"
+    Category:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+          example: "f135221e-e18b-4084-bdeb-4a0f856f92d6"
+        name:
+          type: "string"
+          example: "Category name sample"
+        description:
+          type: "string"
+          example: "Category description sample"
+        created_at:
+          type: "string"
+          format: "date-time"
+          example: "2022-03-30T00:15:37.505Z"
+    CreateCategory:
+      type: "object"
+      required:
+        - "name"
+        - "description"
+      properties:
+        name:
+          type: "string"
+          example: "Category name sample"
+        description:
+          type: "string"
+          example: "Category description sample"
+    Specification:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+          example: "f135221e-e18b-4084-bdeb-4a0f856f92d6"
+        name:
+          type: "string"
+          example: "Specification name sample"
+        description:
+          type: "string"
+          example: "Specification description sample"
+        created_at:
+          type: "string"
+          format: "date-time"
+          example: "2022-03-30T00:15:37.505Z"
+    CreateSpecification:
+      type: "object"
+      required:
+        - "name"
+        - "description"
+      properties:
+        name:
+          type: "string"
+          example: "Specification name sample"
+        description:
+          type: "string"
+          example: "Specification description sample"
+    CreateUser:
+      type: "object"
+      required:
+        - "name"
+        - "email"
+        - "password"
+        - "driver_license"
+      properties:
+        name:
+          type: "string"
+          example: "Example User"
+        email:
+          type: "string"
+          example: "user@example.com"
+        password:
+          type: "string"
+          example: "123456"
+        driver_license:
+          type: "string"
+          example: "ABC123$%"
