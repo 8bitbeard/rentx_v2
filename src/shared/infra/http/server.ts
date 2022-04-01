@@ -4,8 +4,9 @@ import "express-async-errors";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 
-import { AppDataSource } from "./database";
-import "./shared/container";
+import { AppDataSource } from "@shared/infra/typeorm";
+
+import "@shared/container";
 import { errorHandler } from "./middlewares/errorHandler";
 import { router } from "./routes";
 

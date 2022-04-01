@@ -1,7 +1,8 @@
 import { Router } from "express";
 
+import { AuthenticateUserController } from "@modules/accounts/useCases/createAuthentication/AuthenticateUserController";
+
 // eslint-disable-next-line max-len
-import { AuthenticateUserController } from "../modules/accounts/useCases/createAuthentication/AuthenticateUserController";
 
 const authenticateRoutes = Router();
 
