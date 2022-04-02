@@ -8,6 +8,8 @@ info:
 tags:
   - name: "Authentication"
     description: "Everything about authentication"
+  - name: "Cars"
+    description: "Everything about cars"
   - name: "Category"
     description: "Everything about categories"
   - name: "Specification"
@@ -45,6 +47,40 @@ paths:
                 $ref: "#/components/schemas/AppError"
               example:
                 message: "Email or password incorrect!"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Internal server error - error message"
+  /cars:
+    post:
+      tags:
+        - "Cars"
+      summary: "Create a new car"
+      description: "Create a new car"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Car object that needs to be added"
+          required: true
+          schema:
+            $ref: "#/components/schemas/CreateCar"
+      responses:
+        "201":
+          description: "Created"
+        "409":
+          description: "Conflict"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Car already exists!"
         "500":
           description: "Internal Server Error"
           content:
@@ -266,6 +302,38 @@ components:
             email:
               type: "string"
               example: "user@example.com"
+    CreateCar:
+      type: "object"
+      required:
+        - "name"
+        - "description"
+        - "daily_rate"
+        - "license_plate"
+        - "fine_amount"
+        - "brand"
+        - "category_id"
+      properties:
+        name:
+          type: "string"
+          example: "Car name sample"
+        description:
+          type: "string"
+          example: "Car description sample"
+        daily_rate:
+          type: "number"
+          example: 100
+        license_plate:
+          type: "string"
+          example: "ABC-1234"
+        fine_amount:
+          type: "number"
+          example: 60
+        brand:
+          type: "string"
+          example: "Car brand sample"
+        category_id:
+          type: "string"
+          example: "f135221e-e18b-4084-bdeb-4a0f856f92d6"
     Category:
       type: "object"
       properties:
