@@ -6,11 +6,11 @@ services:
     container_name: rentx_database
     restart: always
     ports:
-      - 5010:5432
+      - $POSTGRES_PORT:5432
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: rentx_database
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
     volumes:
       - pgdata:/data/postgres
     # networks:

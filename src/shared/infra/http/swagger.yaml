@@ -23,22 +23,19 @@ paths:
         - "Authentication"
       summary: "Authenticate to the application"
       description: "Authenticate to the application"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "Authenticate on the application"
-          required: true
-          schema:
-            $ref: "#/components/schemas/Credentials"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Credentials"
       responses:
         "201":
           description: "Success"
-          schema:
-            $ref: "#/components/schemas/LoginResponse"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
         "400":
           description: "Bad Request"
           content:
@@ -61,18 +58,33 @@ paths:
         - "Cars"
       summary: "Create a new car"
       description: "Create a new car"
-      consumes:
-        - "application/json"
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "Car object that needs to be added"
-          required: true
-          schema:
-            $ref: "#/components/schemas/CreateCar"
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCar"
       responses:
         "201":
           description: "Created"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Token is missing!"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "User is not an admin!"
         "409":
           description: "Conflict"
           content:
@@ -95,20 +107,33 @@ paths:
         - "Category"
       summary: "Create a new category"
       description: "Create a new category"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "Category object that needs to be added"
-          required: true
-          schema:
-            $ref: "#/components/schemas/CreateCategory"
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCategory"
       responses:
         "201":
           description: "Created"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Token is missing!"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "User is not an admin!"
         "409":
           description: "Conflict"
           content:
@@ -130,8 +155,6 @@ paths:
         - "Category"
       summary: "List all categories"
       description: "List all categories"
-      produces:
-        - "application/json"
       responses:
         "200":
           description: "Success"
@@ -155,17 +178,39 @@ paths:
         - "Category"
       summary: "Bulk create categories"
       description: "Bulk create categories"
-      consumes:
-        - "multipart/form-data"
-      parameters:
-        - in: "formData"
-          name: "file"
-          description: "The file to upload"
-          type: "file"
-          required: true
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: "object"
+              required:
+                - "file"
+              properties:
+                file:
+                  type: "string"
+                  description: "The CSV file to upload"
       responses:
         "201":
           description: "Created"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Token is missing!"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "User is not an admin!"
         "500":
           description: "Internal Server Error"
           content:
@@ -180,20 +225,34 @@ paths:
         - "Specification"
       summary: "Create a new specification"
       description: "Create a new specification"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "Specification object that needs to be added"
-          required: true
-          schema:
-            $ref: "#/components/schemas/CreateSpecification"
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        description: "Specification object that needs to be added"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSpecification"
       responses:
         "201":
           description: "Created"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "Token is missing!"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+              example:
+                message: "User is not an admin!"
         "409":
           description: "Conflict"
           content:
@@ -216,17 +275,13 @@ paths:
         - "Users"
       summary: "Create a new user"
       description: "Create a new user"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "Data to create a new user"
-          required: true
-          schema:
-            $ref: "#/components/schemas/CreateUser"
+      requestBody:
+        required: true
+        description: "Data to create a new user"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUser"
       responses:
         "201":
           description: "Created"
@@ -252,14 +307,18 @@ paths:
         - "Users"
       summary: "Update the user avatar"
       description: "Update the user avatar"
-      consumes:
-        - "multipart/form-data"
-      parameters:
-        - in: "formData"
-          name: "avatar"
-          description: "The avatar image to upload"
-          type: "file"
-          required: true
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: "object"
+              required:
+                - "avatar"
+              properties:
+                avatar:
+                  type: "string"
+                  description: "The avatar image to upload"
       responses:
         "201":
           description: "Created"
@@ -272,6 +331,11 @@ paths:
               example:
                 message: "Internal server error - error message"
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: "JWT"
   schemas:
     AppError:
       type: "object"

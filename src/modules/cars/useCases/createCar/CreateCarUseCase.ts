@@ -33,8 +33,6 @@ class CreateCarUseCase {
       license_plate
     );
 
-    console.log(carAlreadyExists);
-
     if (carAlreadyExists) {
       throw new AppError("Car already exists!", 409);
     }
